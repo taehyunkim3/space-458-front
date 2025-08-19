@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { GALLERY_INFO } from "../constants/galleryInfo";
+import emailjs from '@emailjs/browser';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -30,26 +31,44 @@ export default function ContactPage() {
     }));
   };
 
+  const getInquiryTypeText = (type: string): string => {
+    switch (type) {
+      case 'general': return '일반 문의';
+      case 'exhibition': return '전시 관련';
+      case 'rental': return '대관 문의';
+      case 'collaboration': return '협업 제안';
+      case 'workshop': return '워크숍 문의';
+      case 'press': return '언론 문의';
+      default: return type;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      // EmailJS 클라이언트 사이드 호출
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        from_phone: formData.phone || '연락처 미제공',
+        inquiry_type: getInquiryTypeText(formData.type),
+        subject: formData.subject,
+        message: formData.message,
+        to_email: 'space458seoul@gmail.com',
+      };
 
-      const data = await response.json();
+      const response = await emailjs.send(
+        'service_y7vn47b',
+        'template_6ws6auo', 
+        templateParams,
+        'DiKPAnIMoQ7MkCWqU'
+      );
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to send message');
-      }
-
+      console.log('Email sent successfully:', response);
+      
       setSubmitted(true);
       setFormData({
         name: "",
@@ -60,6 +79,7 @@ export default function ContactPage() {
         message: "",
       });
     } catch (err: unknown) {
+      console.error('Email sending failed:', err);
       setError(err instanceof Error ? err.message : 'Failed to send message. Please try again.');
     } finally {
       setIsSubmitting(false);

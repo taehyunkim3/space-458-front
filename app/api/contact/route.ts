@@ -54,8 +54,23 @@ export async function POST(request: NextRequest) {
     );
   } catch (error: unknown) {
     console.error('Error sending email:', error);
+    
+    // Log more details for debugging
+    console.error('EmailJS Config:', {
+      serviceId: process.env.EMAILJS_SERVICE_ID,
+      templateId: process.env.EMAILJS_TEMPLATE_ID,
+      publicKey: process.env.EMAILJS_PUBLIC_KEY ? 'Set' : 'Not set',
+      privateKey: process.env.EMAILJS_PRIVATE_KEY ? 'Set' : 'Not set',
+    });
+    
+    let errorMessage = 'Failed to send email';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      console.error('Error details:', error.stack);
+    }
+    
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to send email' },
+      { error: errorMessage, details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

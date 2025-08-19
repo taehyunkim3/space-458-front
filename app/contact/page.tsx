@@ -9,6 +9,7 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     type: "general",
     subject: "",
     message: "",
@@ -16,6 +17,7 @@ export default function ContactPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -31,19 +33,37 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError('');
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-    setSubmitted(true);
-    setIsSubmitting(false);
-    setFormData({
-      name: "",
-      email: "",
-      type: "general",
-      subject: "",
-      message: "",
-    });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setSubmitted(true);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        type: "general",
+        subject: "",
+        message: "",
+      });
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -207,7 +227,18 @@ export default function ContactPage() {
                   </p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  {error && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                      <div className="flex items-center">
+                        <svg className="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p className="text-red-600 font-light text-sm">{error}</p>
+                      </div>
+                    </div>
+                  )}
+                  <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label
@@ -245,13 +276,31 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  <div>
-                    <label
-                      htmlFor="type"
-                      className="block text-sm font-light text-gray-700 mb-2"
-                    >
-                      문의 유형 *
-                    </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label
+                        htmlFor="phone"
+                        className="block text-sm font-light text-gray-700 mb-2"
+                      >
+                        연락처
+                      </label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder="010-1234-5678"
+                        className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="type"
+                        className="block text-sm font-light text-gray-700 mb-2"
+                      >
+                        문의 유형 *
+                      </label>
                     <select
                       id="type"
                       name="type"
@@ -267,6 +316,7 @@ export default function ContactPage() {
                       <option value="workshop">워크숍 문의</option>
                       <option value="press">언론 문의</option>
                     </select>
+                    </div>
                   </div>
 
                   <div>
@@ -313,6 +363,7 @@ export default function ContactPage() {
                     {isSubmitting ? "전송 중..." : "문의 보내기"}
                   </button>
                 </form>
+                </div>
               )}
             </div>
           </div>

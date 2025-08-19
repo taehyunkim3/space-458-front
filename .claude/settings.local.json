@@ -11,7 +11,9 @@
       "Bash(npx prisma:*)",
       "Bash(rm:*)",
       "Bash(yarn db:seed:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)"
     ],
     "deny": [],
     "ask": []

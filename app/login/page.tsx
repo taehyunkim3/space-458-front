@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { signIn, getSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { useState, useEffect } from "react";
+import { signIn, getSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function AdminLoginPage() {
   const [credentials, setCredentials] = useState({
-    username: '',
-    password: ''
+    username: "",
+    password: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [remainingTime, setRemainingTime] = useState(0);
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function AdminLoginPage() {
     // Check if already authenticated
     getSession().then((session) => {
       if (session) {
-        router.push('/admin');
+        router.push("/admin");
       }
     });
   }, [router]);
@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
       timer = setInterval(() => {
         setRemainingTime((prev) => {
           if (prev <= 1) {
-            setError('');
+            setError("");
             return 0;
           }
           return prev - 1;
@@ -43,43 +43,47 @@ export default function AdminLoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
     if (remainingTime > 0) {
-      setError(`로그인이 일시적으로 제한되었습니다. ${remainingTime}초 후 다시 시도해주세요.`);
+      setError(
+        `로그인이 일시적으로 제한되었습니다. ${remainingTime}초 후 다시 시도해주세요.`
+      );
       setIsLoading(false);
       return;
     }
 
     try {
-      const result = await signIn('credentials', {
+      const result = await signIn("credentials", {
         username: credentials.username,
         password: credentials.password,
         redirect: false,
       });
 
       if (result?.error) {
-        if (result.error.includes('Too many failed attempts')) {
-          setError('로그인 시도가 5회 초과되었습니다. 1분 후 다시 시도해주세요.');
+        if (result.error.includes("Too many failed attempts")) {
+          setError(
+            "로그인 시도가 5회 초과되었습니다. 1분 후 다시 시도해주세요."
+          );
           setRemainingTime(60);
         } else {
-          setError('아이디 또는 비밀번호가 올바르지 않습니다.');
+          setError("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
       } else if (result?.ok) {
-        router.push('/admin');
+        router.push("/admin");
         router.refresh();
       }
     } catch (error) {
-      setError('로그인 중 오류가 발생했습니다.');
+      setError("로그인 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCredentials(prev => ({
+    setCredentials((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -145,16 +149,32 @@ export default function AdminLoginPage() {
             >
               {isLoading ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   로그인 중...
                 </>
               ) : remainingTime > 0 ? (
                 `${remainingTime}초 후 다시 시도`
               ) : (
-                '로그인'
+                "로그인"
               )}
             </button>
           </div>

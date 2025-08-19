@@ -1,29 +1,24 @@
-'use client';
+"use client";
 
-import { useSession, signOut } from 'next-auth/react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import AuthGuard from '../lib/auth-guard';
+import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import AuthGuard from "../lib/auth-guard";
 
 const adminNavigation = [
-  { name: '대시보드', href: '/admin' },
-  { name: '배너 관리', href: '/admin/banners' },
-  { name: '전시 관리', href: '/admin/exhibitions' },
-  { name: '뉴스 관리', href: '/admin/news' },
-  { name: '갤러리 정보', href: '/admin/gallery-info' },
+  { name: "대시보드", href: "/admin" },
+  { name: "배너 관리", href: "/admin/banners" },
+  { name: "전시 관리", href: "/admin/exhibitions" },
+  { name: "뉴스 관리", href: "/admin/news" },
+  { name: "갤러리 정보", href: "/admin/gallery-info" },
 ];
 
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const pathname = usePathname();
 
-  // Don't show admin layout for login page
-  if (pathname === '/admin/login') {
-    return <>{children}</>;
-  }
-
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/admin/login' });
+    await signOut({ callbackUrl: "/login" });
   };
 
   return (
@@ -33,7 +28,10 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
-              <Link href="/admin" className="text-xl font-light tracking-wider text-gray-900">
+              <Link
+                href="/admin"
+                className="text-xl font-light tracking-wider text-gray-900"
+              >
                 SPACE 458 관리자
               </Link>
               <nav className="hidden md:flex space-x-6">
@@ -43,8 +41,8 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                     href={item.href}
                     className={`text-sm font-light transition-colors ${
                       pathname === item.href
-                        ? 'text-gray-900 border-b-2 border-gray-900 pb-1'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? "text-gray-900 border-b-2 border-gray-900 pb-1"
+                        : "text-gray-600 hover:text-gray-900"
                     }`}
                   >
                     {item.name}
@@ -55,11 +53,11 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600 font-light">
-                {session?.user?.username}
+                {session?.user?.name}
               </span>
               <button
                 onClick={handleSignOut}
-                className="text-sm text-gray-600 hover:text-gray-900 font-light transition-colors"
+                className="cursor-pointer text-sm text-gray-600 hover:text-gray-900 font-light transition-colors"
               >
                 로그아웃
               </button>
@@ -77,9 +75,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
       {/* Admin Content */}
       <main className="py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {children}
-        </div>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
       </main>
     </div>
   );

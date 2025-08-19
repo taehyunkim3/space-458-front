@@ -1,4 +1,5 @@
-import Link from 'next/link';
+import Link from "next/link";
+import { GALLERY_INFO } from "../constants/galleryInfo";
 
 export default function Footer() {
   return (
@@ -7,10 +8,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About */}
           <div>
-            <h3 className="text-lg font-light tracking-wider mb-4">SPACE 458</h3>
+            <h3 className="text-lg font-light tracking-wider mb-4">
+              {GALLERY_INFO.name}
+            </h3>
             <p className="text-sm text-gray-600 leading-relaxed font-light">
-              동시대 예술 플랫폼으로, 예술이 머무는 장소를 넘어서 
-              지속적으로 질문하고 움직이는 살아있는 공간입니다.
+              {GALLERY_INFO.description}
             </p>
           </div>
 
@@ -19,22 +21,34 @@ export default function Footer() {
             <h3 className="text-lg font-light tracking-wider mb-4">MENU</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/about" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light">
+                <Link
+                  href="/about"
+                  className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light"
+                >
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/exhibitions" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light">
+                <Link
+                  href="/exhibitions"
+                  className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light"
+                >
                   Exhibitions
                 </Link>
               </li>
               <li>
-                <Link href="/news" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light">
+                <Link
+                  href="/news"
+                  className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light"
+                >
                   News/Events
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light">
+                <Link
+                  href="/contact"
+                  className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light"
+                >
                   Contact
                 </Link>
               </li>
@@ -44,16 +58,26 @@ export default function Footer() {
           {/* Contact Info */}
           <div>
             <h3 className="text-lg font-light tracking-wider mb-4">CONTACT</h3>
-            <div className="text-sm text-gray-600 space-y-2 font-light">
-              <p>gallery@space458.com</p>
-              <p>Instagram: @space458</p>
+            <div className="text-sm text-gray-600 space-y-2 font-light flex flex-col gap-0.5">
+              <Link
+                href={`mailto:${GALLERY_INFO.contact.email}`}
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light"
+              >
+                {GALLERY_INFO.contact.email}
+              </Link>
+              <Link
+                href={GALLERY_INFO.socialMedia.instagramUrl}
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light"
+              >
+                Instagram: {GALLERY_INFO.socialMedia.instagramId}
+              </Link>
             </div>
           </div>
         </div>
 
         <div className="mt-8 pt-8 border-t border-gray-100">
           <p className="text-xs text-gray-500 text-center font-light">
-            © 2024 Space 458. All rights reserved.
+            © 2025 Space 458. All rights reserved.
           </p>
         </div>
       </div>

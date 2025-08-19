@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { GALLERY_INFO } from '../constants/galleryInfo';
 
 export const metadata = {
   title: 'About | Space 458',
@@ -160,8 +161,8 @@ export default function AboutPage() {
                 <div>
                   <h4 className="font-light mb-2">관람 시간</h4>
                   <p className="text-sm font-light">
-                    화요일 - 일요일: 10:00 - 19:00<br />
-                    월요일 휴관 (공휴일 제외)
+                    {GALLERY_INFO.hours.weekdays}<br />
+                    {GALLERY_INFO.hours.closed}
                   </p>
                 </div>
                 <div>
@@ -171,8 +172,7 @@ export default function AboutPage() {
                 <div>
                   <h4 className="font-light mb-2">주차</h4>
                   <p className="text-sm font-light">
-                    갤러리 전용 주차장 이용 가능<br />
-                    (2시간 무료, 이후 시간당 1,000원)
+                    {GALLERY_INFO.transportation.parking}
                   </p>
                 </div>
               </div>
@@ -184,22 +184,22 @@ export default function AboutPage() {
                 <div>
                   <h4 className="font-light mb-2">주소</h4>
                   <p className="text-sm font-light">
-                    서울특별시 강남구 청담동 458<br />
-                    Space 458 Gallery
+                    {GALLERY_INFO.address.street}<br />
+                    {GALLERY_INFO.name}
                   </p>
                 </div>
                 <div>
                   <h4 className="font-light mb-2">교통</h4>
                   <p className="text-sm font-light">
-                    지하철 7호선 청담역 2번 출구 도보 5분<br />
-                    버스 4412, 6411 청담사거리 하차
+                    {GALLERY_INFO.transportation.subway}<br />
+                    {GALLERY_INFO.transportation.bus}
                   </p>
                 </div>
                 <div>
                   <h4 className="font-light mb-2">연락처</h4>
                   <p className="text-sm font-light">
-                    전화: 02-1234-5678<br />
-                    이메일: gallery@space458.com
+                    전화: {GALLERY_INFO.contact.phone}<br />
+                    이메일: {GALLERY_INFO.contact.email}
                   </p>
                 </div>
               </div>

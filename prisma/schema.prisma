@@ -60,20 +60,6 @@ model News {
   @@map("news")
 }
 
-model GalleryInfo {
-  id          Int    @id @default(autoincrement())
-  name        String
-  description String @db.Text
-  address     String
-  phone       String
-  email       String
-  hours       String
-  instagram   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("gallery_info")
-}
 
 model AdminUser {
   id        Int      @id @default(autoincrement())

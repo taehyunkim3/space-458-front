@@ -13,7 +13,9 @@
       "Bash(yarn db:seed:*)",
       "Bash(mv:*)",
       "Bash(mkdir:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

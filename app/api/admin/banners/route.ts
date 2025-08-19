@@ -59,10 +59,10 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(banner, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating banner:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

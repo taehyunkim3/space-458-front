@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
         artist,
         startDate,
         endDate,
-        status: status as any,
+        status: status as 'CURRENT' | 'UPCOMING' | 'PAST',
         poster: posterPath,
         images,
         description,
@@ -75,10 +75,10 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(exhibition, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating exhibition:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

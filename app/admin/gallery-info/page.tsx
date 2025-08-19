@@ -88,8 +88,8 @@ export default function GalleryInfoPage() {
       
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
-    } catch (error: any) {
-      setError(error.message || '갤러리 정보 업데이트에 실패했습니다.');
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : '갤러리 정보 업데이트에 실패했습니다.');
     } finally {
       setSaving(false);
     }

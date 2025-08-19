@@ -82,7 +82,7 @@ export async function PUT(
       where: { id: parseInt(id) },
       data: {
         title,
-        type: type as any,
+        type: type as 'NOTICE' | 'PRESS' | 'EVENT' | 'WORKSHOP',
         date,
         content,
         image: imagePath,
@@ -92,10 +92,10 @@ export async function PUT(
     });
 
     return NextResponse.json(news);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating news:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

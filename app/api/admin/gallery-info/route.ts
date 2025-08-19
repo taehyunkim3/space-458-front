@@ -51,10 +51,10 @@ export async function PUT(request: NextRequest) {
     }
 
     return NextResponse.json(galleryInfo);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating gallery info:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     );
   }

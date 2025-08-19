@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:thepage-gallery.com)",
+      "WebFetch(domain:www.nooncontemporary.com)",
+      "Bash(yarn dev)",
+      "Bash(yarn lint)",
+      "Bash(yarn build)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

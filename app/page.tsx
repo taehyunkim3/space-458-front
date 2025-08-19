@@ -1,13 +1,11 @@
-import BannerSlider from './components/BannerSlider';
-import RecentExhibitions from './components/RecentExhibitions';
-import InstagramFeed from './components/InstagramFeed';
+import BannerSliderDB from './components/BannerSliderDB';
+import RecentExhibitionsDB from './components/RecentExhibitionsDB';
 
 export default function Home() {
   return (
     <>
-      <BannerSlider />
-      <RecentExhibitions />
-      <InstagramFeed />
+      <BannerSliderDB />
+      <RecentExhibitionsDB />
     </>
   );
 }

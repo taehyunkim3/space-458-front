@@ -1,43 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { exhibitions } from '../data/exhibitions';
 
-interface Exhibition {
-  id: number;
-  title: string;
-  artist: string;
-  startDate: string;
-  endDate: string;
-  status: 'CURRENT' | 'UPCOMING' | 'PAST';
-  poster: string;
-  description: string;
-  curator?: string;
-}
-
-export default function ExhibitionsPageDB() {
-  const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
-  const [filter, setFilter] = useState<'all' | 'CURRENT' | 'UPCOMING' | 'PAST'>('all');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchExhibitions = async () => {
-      try {
-        const response = await fetch('/api/exhibitions');
-        if (response.ok) {
-          const data = await response.json();
-          setExhibitions(data);
-        }
-      } catch (error) {
-        console.error('Error fetching exhibitions:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchExhibitions();
-  }, []);
+export default function ExhibitionsPage() {
+  const [filter, setFilter] = useState<'all' | 'current' | 'upcoming' | 'past'>('all');
 
   const filteredExhibitions = filter === 'all' 
     ? exhibitions 
@@ -54,11 +23,11 @@ export default function ExhibitionsPageDB() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'CURRENT':
+      case 'current':
         return '현재 전시';
-      case 'UPCOMING':
+      case 'upcoming':
         return '예정 전시';
-      case 'PAST':
+      case 'past':
         return '지난 전시';
       default:
         return '';
@@ -67,11 +36,11 @@ export default function ExhibitionsPageDB() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'CURRENT':
+      case 'current':
         return 'bg-green-600';
-      case 'UPCOMING':
+      case 'upcoming':
         return 'bg-blue-600';
-      case 'PAST':
+      case 'past':
         return 'bg-gray-600';
       default:
         return 'bg-gray-600';
@@ -80,28 +49,10 @@ export default function ExhibitionsPageDB() {
 
   const filterButtons = [
     { key: 'all', label: '전체' },
-    { key: 'CURRENT', label: '현재 전시' },
-    { key: 'UPCOMING', label: '예정 전시' },
-    { key: 'PAST', label: '지난 전시' },
+    { key: 'current', label: '현재 전시' },
+    { key: 'upcoming', label: '예정 전시' },
+    { key: 'past', label: '지난 전시' },
   ];
-
-  if (loading) {
-    return (
-      <div className="min-h-screen">
-        <section className="relative h-96 overflow-hidden bg-gray-100 flex items-center justify-center">
-          <h1 className="text-4xl md:text-6xl font-light text-gray-900 tracking-wider">
-            EXHIBITIONS
-          </h1>
-        </section>
-        <section className="py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-4 text-gray-600 font-light">전시 정보를 불러오는 중...</p>
-          </div>
-        </section>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen">

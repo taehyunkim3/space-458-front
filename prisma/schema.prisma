@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Banner {
+  id       Int    @id @default(autoincrement())
+  title    String
+  subtitle String?
+  image    String
+  link     String?
+  type     String @default("image")
+  order    Int    @default(0)
+  active   Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("banners")
+}
+
+model Exhibition {
+  id          Int      @id @default(autoincrement())
+  title       String
+  artist      String
+  startDate   DateTime
+  endDate     DateTime
+  status      ExhibitionStatus
+  poster      String
+  images      String[]
+  description String   @db.Text
+  curator     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("exhibitions")
+}
+
+model News {
+  id        Int      @id @default(autoincrement())
+  title     String
+  type      NewsType
+  date      DateTime
+  content   String   @db.Text
+  image     String?
+  link      String?
+  featured  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("news")
+}
+
+model GalleryInfo {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String @db.Text
+  address     String
+  phone       String
+  email       String
+  hours       String
+  instagram   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("gallery_info")
+}
+
+model AdminUser {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admin_users")
+}
+
+model LoginAttempt {
+  id        Int      @id @default(autoincrement())
+  ip        String
+  attempts  Int      @default(1)
+  lockedAt  DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([ip])
+  @@map("login_attempts")
+}
+
+enum ExhibitionStatus {
+  CURRENT
+  UPCOMING
+  PAST
+}
+
+enum NewsType {
+  NOTICE
+  PRESS
+  EVENT
+  WORKSHOP
+}

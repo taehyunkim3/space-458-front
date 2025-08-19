@@ -1,46 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { newsItems } from '../data/news';
 
-interface NewsItem {
-  id: number;
-  title: string;
-  type: 'NOTICE' | 'PRESS' | 'EVENT' | 'WORKSHOP';
-  date: string;
-  content: string;
-  image?: string;
-  link?: string;
-  featured: boolean;
-}
-
-export default function NewsPageDB() {
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [filter, setFilter] = useState<'all' | 'NOTICE' | 'PRESS' | 'EVENT' | 'WORKSHOP'>('all');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await fetch('/api/news');
-        if (response.ok) {
-          const data = await response.json();
-          setNews(data);
-        }
-      } catch (error) {
-        console.error('Error fetching news:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNews();
-  }, []);
+export default function NewsPage() {
+  const [filter, setFilter] = useState<'all' | 'notice' | 'press' | 'event' | 'workshop'>('all');
 
   const filteredNews = filter === 'all' 
-    ? news 
-    : news.filter(item => item.type === filter);
+    ? newsItems 
+    : newsItems.filter(item => item.type === filter);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -53,13 +23,13 @@ export default function NewsPageDB() {
 
   const getTypeText = (type: string) => {
     switch (type) {
-      case 'NOTICE':
+      case 'notice':
         return '공지사항';
-      case 'PRESS':
+      case 'press':
         return '보도자료';
-      case 'EVENT':
+      case 'event':
         return '이벤트';
-      case 'WORKSHOP':
+      case 'workshop':
         return '워크숍';
       default:
         return '';
@@ -68,13 +38,13 @@ export default function NewsPageDB() {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'NOTICE':
+      case 'notice':
         return 'bg-blue-600';
-      case 'PRESS':
+      case 'press':
         return 'bg-green-600';
-      case 'EVENT':
+      case 'event':
         return 'bg-purple-600';
-      case 'WORKSHOP':
+      case 'workshop':
         return 'bg-orange-600';
       default:
         return 'bg-gray-600';
@@ -83,29 +53,11 @@ export default function NewsPageDB() {
 
   const filterButtons = [
     { key: 'all', label: '전체' },
-    { key: 'NOTICE', label: '공지사항' },
-    { key: 'PRESS', label: '보도자료' },
-    { key: 'EVENT', label: '이벤트' },
-    { key: 'WORKSHOP', label: '워크숍' },
+    { key: 'notice', label: '공지사항' },
+    { key: 'press', label: '보도자료' },
+    { key: 'event', label: '이벤트' },
+    { key: 'workshop', label: '워크숍' },
   ];
-
-  if (loading) {
-    return (
-      <div className="min-h-screen">
-        <section className="relative h-96 overflow-hidden bg-gray-100 flex items-center justify-center">
-          <h1 className="text-4xl md:text-6xl font-light text-gray-900 tracking-wider">
-            NEWS & EVENTS
-          </h1>
-        </section>
-        <section className="py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-4 text-gray-600 font-light">뉴스 정보를 불러오는 중...</p>
-          </div>
-        </section>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen">
@@ -162,7 +114,7 @@ export default function NewsPageDB() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {news.filter(item => item.featured).map((item) => (
+              {newsItems.filter(item => item.featured).map((item) => (
                 <div key={item.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                   {item.image && (
                     <div className="relative aspect-[16/9] overflow-hidden">

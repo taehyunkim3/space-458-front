@@ -5,7 +5,13 @@
       "WebFetch(domain:www.nooncontemporary.com)",
       "Bash(yarn dev)",
       "Bash(yarn lint)",
-      "Bash(yarn build)"
+      "Bash(yarn build)",
+      "Bash(yarn add:*)",
+      "Bash(touch:*)",
+      "Bash(npx prisma:*)",
+      "Bash(rm:*)",
+      "Bash(yarn db:seed:*)",
+      "Bash(mv:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface Exhibition {
   id: number;
@@ -10,7 +10,7 @@ interface Exhibition {
   artist: string;
   startDate: string;
   endDate: string;
-  status: 'CURRENT' | 'UPCOMING' | 'PAST';
+  status: "CURRENT" | "UPCOMING" | "PAST";
   poster: string;
   description: string;
   curator?: string;
@@ -18,19 +18,21 @@ interface Exhibition {
 
 export default function ExhibitionsPageDB() {
   const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
-  const [filter, setFilter] = useState<'all' | 'CURRENT' | 'UPCOMING' | 'PAST'>('all');
+  const [filter, setFilter] = useState<"all" | "CURRENT" | "UPCOMING" | "PAST">(
+    "all"
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchExhibitions = async () => {
       try {
-        const response = await fetch('/api/exhibitions');
+        const response = await fetch("/api/exhibitions");
         if (response.ok) {
           const data = await response.json();
           setExhibitions(data);
         }
       } catch (error) {
-        console.error('Error fetching exhibitions:', error);
+        console.error("Error fetching exhibitions:", error);
       } finally {
         setLoading(false);
       }
@@ -39,50 +41,51 @@ export default function ExhibitionsPageDB() {
     fetchExhibitions();
   }, []);
 
-  const filteredExhibitions = filter === 'all' 
-    ? exhibitions 
-    : exhibitions.filter(ex => ex.status === filter);
+  const filteredExhibitions =
+    filter === "all"
+      ? exhibitions
+      : exhibitions.filter((ex) => ex.status === filter);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return date.toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'CURRENT':
-        return '현재 전시';
-      case 'UPCOMING':
-        return '예정 전시';
-      case 'PAST':
-        return '지난 전시';
+      case "CURRENT":
+        return "현재 전시";
+      case "UPCOMING":
+        return "예정 전시";
+      case "PAST":
+        return "지난 전시";
       default:
-        return '';
+        return "";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'CURRENT':
-        return 'bg-green-600';
-      case 'UPCOMING':
-        return 'bg-blue-600';
-      case 'PAST':
-        return 'bg-gray-600';
+      case "CURRENT":
+        return "bg-green-600";
+      case "UPCOMING":
+        return "bg-blue-600";
+      case "PAST":
+        return "bg-gray-600";
       default:
-        return 'bg-gray-600';
+        return "bg-gray-600";
     }
   };
 
   const filterButtons = [
-    { key: 'all', label: '전체' },
-    { key: 'CURRENT', label: '현재 전시' },
-    { key: 'UPCOMING', label: '예정 전시' },
-    { key: 'PAST', label: '지난 전시' },
+    { key: "all", label: "전체" },
+    { key: "CURRENT", label: "현재 전시" },
+    { key: "UPCOMING", label: "예정 전시" },
+    { key: "PAST", label: "지난 전시" },
   ];
 
   if (loading) {
@@ -96,7 +99,9 @@ export default function ExhibitionsPageDB() {
         <section className="py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-4 text-gray-600 font-light">전시 정보를 불러오는 중...</p>
+            <p className="mt-4 text-gray-600 font-light">
+              전시 정보를 불러오는 중...
+            </p>
           </div>
         </section>
       </div>
@@ -108,7 +113,7 @@ export default function ExhibitionsPageDB() {
       {/* Hero Section */}
       <section className="relative h-96 overflow-hidden">
         <Image
-          src="https://via.placeholder.com/1920x800/f3f4f6/6b7280?text=Exhibitions"
+          src="/images/out-1.jpg.webp"
           alt="Exhibitions"
           fill
           className="object-cover"
@@ -133,8 +138,8 @@ export default function ExhibitionsPageDB() {
                 onClick={() => setFilter(button.key as typeof filter)}
                 className={`px-6 py-2 text-sm font-light tracking-wide transition-colors duration-300 ${
                   filter === button.key
-                    ? 'bg-gray-900 text-white'
-                    : 'border border-gray-300 text-gray-700 hover:border-gray-900 hover:text-gray-900'
+                    ? "bg-gray-900 text-white"
+                    : "border border-gray-300 text-gray-700 hover:border-gray-900 hover:text-gray-900"
                 }`}
               >
                 {button.label}
@@ -149,7 +154,9 @@ export default function ExhibitionsPageDB() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {filteredExhibitions.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-600 font-light">해당하는 전시가 없습니다.</p>
+              <p className="text-gray-600 font-light">
+                해당하는 전시가 없습니다.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -165,12 +172,16 @@ export default function ExhibitionsPageDB() {
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                       <div className="absolute top-4 left-4">
-                        <span className={`${getStatusColor(exhibition.status)} text-white px-3 py-1 text-xs font-light tracking-wide`}>
+                        <span
+                          className={`${getStatusColor(
+                            exhibition.status
+                          )} text-white px-3 py-1 text-xs font-light tracking-wide`}
+                        >
                           {getStatusText(exhibition.status)}
                         </span>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-3">
                       <h3 className="text-2xl font-light tracking-wide group-hover:text-gray-600 transition-colors">
                         {exhibition.title}
@@ -179,7 +190,8 @@ export default function ExhibitionsPageDB() {
                         {exhibition.artist}
                       </p>
                       <p className="text-gray-500 text-sm font-light">
-                        {formatDate(exhibition.startDate)} - {formatDate(exhibition.endDate)}
+                        {formatDate(exhibition.startDate)} -{" "}
+                        {formatDate(exhibition.endDate)}
                       </p>
                       {exhibition.curator && (
                         <p className="text-gray-500 text-sm font-light">

@@ -82,7 +82,7 @@ export default function Footer() {
             </p>
             <Link
               href="/admin"
-              className="text-xs text-gray-400 hover:text-gray-500 transition-colors font-light opacity-50"
+              className="text-xs text-gray-400 hover:text-gray-500 transition-colors font-light "
             >
               관리자
             </Link>

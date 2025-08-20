@@ -47,20 +47,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Process poster image
-    await processImageUpload(posterFile, 'exhibitions', 800, 90);
-    // TODO: Update to use DB BLOB storage
-    const posterPath = '/api/images/exhibitions/temp?type=poster';
+    const { imageData: posterData, mimeType: posterMimeType } = await processImageUpload(posterFile, 'exhibitions', 800, 90);
 
     // Process additional images if any
-    const images: string[] = [];
+    const imagesData: Buffer[] = [];
+    const imagesMimeTypes: string[] = [];
     const imageFiles = formData.getAll('images') as File[];
     
-    for (let i = 0; i < imageFiles.length; i++) {
-      const imageFile = imageFiles[i];
+    for (const imageFile of imageFiles) {
       if (imageFile.size > 0) {
-        await processImageUpload(imageFile, 'exhibitions', 1200, 85);
-        // TODO: Update to use DB BLOB storage
-        images.push(`/api/images/exhibitions/temp?type=${i}`);
+        const { imageData, mimeType } = await processImageUpload(imageFile, 'exhibitions', 1200, 85);
+        imagesData.push(imageData);
+        imagesMimeTypes.push(mimeType);
       }
     }
 
@@ -71,8 +69,11 @@ export async function POST(request: NextRequest) {
         startDate,
         endDate,
         status: status as 'CURRENT' | 'UPCOMING' | 'PAST',
-        poster: posterPath,
-        images,
+        posterData,
+        posterMimeType,
+        images: [], // Keep empty for backwards compatibility
+        imagesData,
+        imagesMimeTypes,
         description,
         curator
       }

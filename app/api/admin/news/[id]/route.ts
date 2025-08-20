@@ -66,26 +66,34 @@ export async function PUT(
       return NextResponse.json({ error: 'News not found' }, { status: 404 });
     }
 
-    let imagePath = existingNews.image;
+    let updateData: {
+      title: string;
+      type: 'NOTICE' | 'PRESS' | 'EVENT' | 'WORKSHOP';
+      date: Date;
+      content: string;
+      link?: string | null;
+      featured: boolean;
+      imageData?: Buffer;
+      imageMimeType?: string;
+    } = {
+      title,
+      type: type as 'NOTICE' | 'PRESS' | 'EVENT' | 'WORKSHOP',
+      date,
+      content,
+      link,
+      featured
+    };
 
     // If new image is uploaded, process it
     if (imageFile && imageFile.size > 0) {
-      await processImageUpload(imageFile, 'news', 1200, 85);
-      // TODO: Update to use DB BLOB storage
-      imagePath = `/api/images/news/${existingNews.id}`;
+      const { imageData, mimeType } = await processImageUpload(imageFile, 'news', 1200, 85);
+      updateData.imageData = imageData;
+      updateData.imageMimeType = mimeType;
     }
 
     const news = await prisma.news.update({
       where: { id: parseInt(id) },
-      data: {
-        title,
-        type: type as 'NOTICE' | 'PRESS' | 'EVENT' | 'WORKSHOP',
-        date,
-        content,
-        image: imagePath,
-        link,
-        featured
-      }
+      data: updateData
     });
 
     return NextResponse.json(news);

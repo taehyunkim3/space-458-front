@@ -45,11 +45,12 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    let imagePath = null;
+    let imageData = null;
+    let imageMimeType = null;
     if (imageFile && imageFile.size > 0) {
-      await processImageUpload(imageFile, 'news', 1200, 85);
-      // TODO: Update to use DB BLOB storage
-      imagePath = '/api/images/news/temp';
+      const result = await processImageUpload(imageFile, 'news', 1200, 85);
+      imageData = result.imageData;
+      imageMimeType = result.mimeType;
     }
 
     const newsItem = await prisma.news.create({
@@ -58,7 +59,8 @@ export async function POST(request: NextRequest) {
         type: type as 'NOTICE' | 'PRESS' | 'EVENT' | 'WORKSHOP',
         date,
         content,
-        image: imagePath,
+        imageData,
+        imageMimeType,
         link,
         featured
       }

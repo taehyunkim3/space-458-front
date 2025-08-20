@@ -157,7 +157,7 @@ export default function NewsPage() {
                         {item.image && (
                           <div className="relative w-12 h-12 rounded overflow-hidden flex-shrink-0">
                             <Image
-                              src={item.image}
+                              src={`/api/images/news/${item.id}`}
                               alt={item.title}
                               fill
                               className="object-cover"

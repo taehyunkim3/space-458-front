@@ -67,42 +67,56 @@ export async function PUT(
       return NextResponse.json({ error: 'Exhibition not found' }, { status: 404 });
     }
 
-    let posterPath = existingExhibition.poster;
+    let updateData: {
+      title: string;
+      artist: string;
+      startDate: Date;
+      endDate: Date;
+      status: 'CURRENT' | 'UPCOMING' | 'PAST';
+      description: string;
+      curator?: string | null;
+      posterData?: Buffer;
+      posterMimeType?: string;
+      imagesData?: Buffer[];
+      imagesMimeTypes?: string[];
+    } = {
+      title,
+      artist,
+      startDate,
+      endDate,
+      status: status as 'CURRENT' | 'UPCOMING' | 'PAST',
+      description,
+      curator
+    };
 
     // If new poster is uploaded, process it
     if (posterFile && posterFile.size > 0) {
-      await processImageUpload(posterFile, 'exhibitions', 800, 90);
-      // For now, we'll keep the old poster path structure
-      // TODO: Update to use DB BLOB storage
-      posterPath = `/api/images/exhibitions/${existingExhibition.id}?type=poster`;
+      const { imageData: posterData, mimeType: posterMimeType } = await processImageUpload(posterFile, 'exhibitions', 800, 90);
+      updateData.posterData = posterData;
+      updateData.posterMimeType = posterMimeType;
     }
 
     // Process additional images if any
-    const images: string[] = [...existingExhibition.images];
     const imageFiles = formData.getAll('images') as File[];
-    
-    for (let i = 0; i < imageFiles.length; i++) {
-      const imageFile = imageFiles[i];
-      if (imageFile.size > 0) {
-        await processImageUpload(imageFile, 'exhibitions', 1200, 85);
-        // TODO: Update to use DB BLOB storage
-        images.push(`/api/images/exhibitions/${existingExhibition.id}?type=${i}`);
+    if (imageFiles.length > 0 && imageFiles.some(f => f.size > 0)) {
+      const imagesData: Buffer[] = [];
+      const imagesMimeTypes: string[] = [];
+      
+      for (const imageFile of imageFiles) {
+        if (imageFile.size > 0) {
+          const { imageData, mimeType } = await processImageUpload(imageFile, 'exhibitions', 1200, 85);
+          imagesData.push(imageData);
+          imagesMimeTypes.push(mimeType);
+        }
       }
+      
+      updateData.imagesData = imagesData;
+      updateData.imagesMimeTypes = imagesMimeTypes;
     }
 
     const exhibition = await prisma.exhibition.update({
       where: { id: parseInt(id) },
-      data: {
-        title,
-        artist,
-        startDate,
-        endDate,
-        status: status as 'CURRENT' | 'UPCOMING' | 'PAST',
-        poster: posterPath,
-        images,
-        description,
-        curator
-      }
+      data: updateData
     });
 
     return NextResponse.json(exhibition);

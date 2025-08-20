@@ -154,7 +154,7 @@ export default function ExhibitionsPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="relative w-16 h-24 rounded overflow-hidden">
                         <Image
-                          src={exhibition.poster}
+                          src={`/api/images/exhibitions/${exhibition.id}?type=poster`}
                           alt={exhibition.title}
                           fill
                           className="object-cover"

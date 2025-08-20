@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { GALLERY_INFO } from '../constants/galleryInfo';
+import GallerySpaces from '../components/GallerySpaces';
 
 export const metadata = {
   title: 'About | Space 458',
@@ -61,69 +62,12 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Gallery Space */}
-      <section className="py-20 bg-gray-50">
+      {/* Gallery Spaces - Using Real Images */}
+      <GallerySpaces />
+
+      {/* Floor Plan Download */}
+      <section className="py-20 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-light tracking-wider mb-4">
-              갤러리 공간
-            </h2>
-            <p className="text-gray-600 font-light">
-              현대적이고 유연한 전시 공간에서 다양한 예술 작품을 만나보세요
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            <div className="space-y-4">
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
-                  src="https://via.placeholder.com/600x450/f3f4f6/6b7280?text=Main+Gallery"
-                  alt="Gallery Interior 1"
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </div>
-              <h3 className="text-xl font-light tracking-wide">메인 전시장</h3>
-              <p className="text-gray-600 text-sm font-light">
-                넓고 개방적인 메인 전시 공간으로 대형 작품 전시에 적합합니다.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
-                  src="https://via.placeholder.com/600x450/f3f4f6/6b7280?text=Project+Room"
-                  alt="Gallery Interior 2"
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </div>
-              <h3 className="text-xl font-light tracking-wide">프로젝트 룸</h3>
-              <p className="text-gray-600 text-sm font-light">
-                소규모 전시와 실험적 프로젝트를 위한 유연한 공간입니다.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
-                  src="https://via.placeholder.com/600x450/f3f4f6/6b7280?text=Event+Hall"
-                  alt="Gallery Interior 3"
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </div>
-              <h3 className="text-xl font-light tracking-wide">이벤트 홀</h3>
-              <p className="text-gray-600 text-sm font-light">
-                워크숍, 강연, 아티스트 토크 등 다양한 프로그램이 진행됩니다.
-              </p>
-            </div>
-          </div>
-
-          {/* Floor Plan Download */}
           <div className="text-center">
             <h3 className="text-2xl font-light tracking-wider mb-8">전시공간 도면</h3>
             <p className="text-gray-600 font-light mb-8">

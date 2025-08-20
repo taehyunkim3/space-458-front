@@ -158,7 +158,7 @@ export default function ExhibitionsPageDB() {
                   <Link href={`/exhibitions/${exhibition.id}`}>
                     <div className="relative aspect-[3/4] mb-6 overflow-hidden">
                       <Image
-                        src={exhibition.poster}
+                        src={`/api/images/exhibitions/${exhibition.id}?type=poster`}
                         alt={exhibition.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"

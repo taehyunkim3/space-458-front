@@ -167,7 +167,7 @@ export default function NewsPageDB() {
                   {item.image && (
                     <div className="relative aspect-[16/9] overflow-hidden">
                       <Image
-                        src={item.image}
+                        src={`/api/images/news/${item.id}`}
                         alt={item.title}
                         fill
                         className="object-cover"
@@ -239,7 +239,7 @@ export default function NewsPageDB() {
                       <div className="md:w-1/3">
                         <div className="relative aspect-[16/9] overflow-hidden rounded">
                           <Image
-                            src={item.image}
+                            src={`/api/images/news/${item.id}`}
                             alt={item.title}
                             fill
                             className="object-cover"

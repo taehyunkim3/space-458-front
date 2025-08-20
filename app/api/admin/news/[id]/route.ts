@@ -66,29 +66,34 @@ export async function PUT(
       return NextResponse.json({ error: 'News not found' }, { status: 404 });
     }
 
-    let imagePath = existingNews.image;
+    const updateData: {
+      title: string;
+      type: 'NOTICE' | 'PRESS' | 'EVENT' | 'WORKSHOP';
+      date: Date;
+      content: string;
+      link?: string | null;
+      featured: boolean;
+      imageData?: Buffer;
+      imageMimeType?: string;
+    } = {
+      title,
+      type: type as 'NOTICE' | 'PRESS' | 'EVENT' | 'WORKSHOP',
+      date,
+      content,
+      link,
+      featured
+    };
 
-    // If new image is uploaded, process it and delete old one
+    // If new image is uploaded, process it
     if (imageFile && imageFile.size > 0) {
-      imagePath = await processImageUpload(imageFile, 'news', 1200, 85);
-      
-      // Delete old image
-      if (existingNews.image && existingNews.image.startsWith('/uploads/')) {
-        await deleteImage(existingNews.image);
-      }
+      const { imageData, mimeType } = await processImageUpload(imageFile, 'news', 1200, 85);
+      updateData.imageData = imageData;
+      updateData.imageMimeType = mimeType;
     }
 
     const news = await prisma.news.update({
       where: { id: parseInt(id) },
-      data: {
-        title,
-        type: type as 'NOTICE' | 'PRESS' | 'EVENT' | 'WORKSHOP',
-        date,
-        content,
-        image: imagePath,
-        link,
-        featured
-      }
+      data: updateData
     });
 
     return NextResponse.json(news);
@@ -124,7 +129,7 @@ export async function DELETE(
 
     // Delete image if it's an upload
     if (news.image && news.image.startsWith('/uploads/')) {
-      await deleteImage(news.image);
+      await deleteImage();
     }
 
     // Delete news from database

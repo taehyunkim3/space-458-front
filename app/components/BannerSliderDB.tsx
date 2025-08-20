@@ -96,7 +96,7 @@ export default function BannerSliderDB() {
           }`}
         >
           <Image
-            src={slide.image}
+            src={`/api/images/banners/${slide.id}`}
             alt={slide.title}
             fill
             className="object-cover"

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export default function AdminLoginPage() {
   const [credentials, setCredentials] = useState({
@@ -73,7 +72,7 @@ export default function AdminLoginPage() {
         router.push("/admin");
         router.refresh();
       }
-    } catch (error) {
+    } catch {
       setError("로그인 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);

@@ -47,16 +47,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Process poster image
-    const posterPath = await processImageUpload(posterFile, 'exhibitions', 800, 90);
+    const { imageData: posterData, mimeType: posterMimeType } = await processImageUpload(posterFile, 'exhibitions', 800, 90);
 
     // Process additional images if any
-    const images: string[] = [];
+    const imagesData: Buffer[] = [];
+    const imagesMimeTypes: string[] = [];
     const imageFiles = formData.getAll('images') as File[];
     
     for (const imageFile of imageFiles) {
       if (imageFile.size > 0) {
-        const imagePath = await processImageUpload(imageFile, 'exhibitions', 1200, 85);
-        images.push(imagePath);
+        const { imageData, mimeType } = await processImageUpload(imageFile, 'exhibitions', 1200, 85);
+        imagesData.push(imageData);
+        imagesMimeTypes.push(mimeType);
       }
     }
 
@@ -67,8 +69,11 @@ export async function POST(request: NextRequest) {
         startDate,
         endDate,
         status: status as 'CURRENT' | 'UPCOMING' | 'PAST',
-        poster: posterPath,
-        images,
+        posterData,
+        posterMimeType,
+        images: [], // Keep empty for backwards compatibility
+        imagesData,
+        imagesMimeTypes,
         description,
         curator
       }

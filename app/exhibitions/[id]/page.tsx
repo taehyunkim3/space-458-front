@@ -96,7 +96,7 @@ export default async function ExhibitionDetailPage({ params }: ExhibitionDetailP
             {/* Poster */}
             <div className="relative aspect-[3/4] overflow-hidden">
               <Image
-                src={exhibition.poster}
+                src={`/api/images/exhibitions/${exhibition.id}?type=poster`}
                 alt={exhibition.title}
                 fill
                 className="object-cover"
@@ -176,7 +176,7 @@ export default async function ExhibitionDetailPage({ params }: ExhibitionDetailP
               {exhibition.images.map((image, index) => (
                 <div key={index} className="relative aspect-[4/3] overflow-hidden">
                   <Image
-                    src={image}
+                    src={`/api/images/exhibitions/${exhibition.id}?type=${index}`}
                     alt={`${exhibition.title} 전시 전경 ${index + 1}`}
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-500"

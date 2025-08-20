@@ -18,7 +18,9 @@
       "Bash(npm run build:*)",
       "Bash(yarn dev:*)",
       "Bash(yarn install)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(gh auth:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

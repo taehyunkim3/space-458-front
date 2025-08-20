@@ -48,11 +48,7 @@ export default function NewNewsPage() {
     try {
       setFileSizeInfo(`원본: ${formatFileSize(file.size)}`);
       
-      const compressed = await compressImage(file, {
-        maxWidth: 1200,
-        maxHeight: 800,
-        quality: 0.85
-      });
+      const compressed = await compressImage(file, 1200, 0.85);
       
       setCompressedFile(compressed);
       setFileSizeInfo(prev => `${prev} → 압축: ${formatFileSize(compressed.size)}`);

@@ -51,11 +51,7 @@ export default function NewExhibitionPage() {
     try {
       setFileSizeInfo(`원본: ${formatFileSize(file.size)}`);
       
-      const compressed = await compressImage(file, {
-        maxWidth: 800,
-        maxHeight: 1200,
-        quality: 0.9
-      });
+      const compressed = await compressImage(file, 800, 0.9);
       
       setCompressedPoster(compressed);
       setFileSizeInfo(prev => `${prev} → 압축: ${formatFileSize(compressed.size)}`);
@@ -96,11 +92,7 @@ export default function NewExhibitionPage() {
       const previews: string[] = [];
       
       for (const file of validFiles) {
-        const compressedFile = await compressImage(file, {
-          maxWidth: 1200,
-          maxHeight: 1200,
-          quality: 0.85
-        });
+        const compressedFile = await compressImage(file, 1200, 0.85);
         compressed.push(compressedFile);
         previews.push(URL.createObjectURL(compressedFile));
       }

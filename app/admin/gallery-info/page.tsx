@@ -43,7 +43,7 @@ export default function GalleryInfoPage() {
       await new Promise(resolve => setTimeout(resolve, 1000)); // 임시 지연
       
       setMessage('갤러리 정보가 성공적으로 업데이트되었습니다. 변경사항을 적용하려면 개발자에게 문의하세요.');
-    } catch (err) {
+    } catch {
       setError('갤러리 정보 업데이트에 실패했습니다.');
     } finally {
       setIsSubmitting(false);

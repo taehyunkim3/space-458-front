@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma';
 import Link from 'next/link';
+import { getExhibitionStatus, getStatusLabel } from '../lib/exhibition-status';
 
 async function getDashboardStats() {
   const [bannerCount, exhibitionCount, newsCount] = await Promise.all([
@@ -11,7 +12,7 @@ async function getDashboardStats() {
   const recentExhibitions = await prisma.exhibition.findMany({
     take: 3,
     orderBy: { createdAt: 'desc' },
-    select: { id: true, title: true, artist: true, status: true }
+    select: { id: true, title: true, artist: true, startDate: true, endDate: true }
   });
 
   const recentNews = await prisma.news.findMany({
@@ -38,14 +39,6 @@ export default async function AdminDashboard() {
     });
   };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'CURRENT': return '현재 전시';
-      case 'UPCOMING': return '예정 전시';
-      case 'PAST': return '지난 전시';
-      default: return status;
-    }
-  };
 
   const getNewsTypeText = (type: string) => {
     switch (type) {
@@ -152,7 +145,7 @@ export default async function AdminDashboard() {
                       <p className="text-xs text-gray-500 font-light">{exhibition.artist}</p>
                     </div>
                     <span className="text-xs text-gray-500 font-light">
-                      {getStatusText(exhibition.status)}
+                      {getStatusLabel(getExhibitionStatus(new Date(exhibition.startDate), new Date(exhibition.endDate)))}
                     </span>
                   </div>
                 ))

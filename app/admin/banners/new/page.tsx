@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { compressImage, validateImageFile, formatFileSize } from '../../../lib/imageUtils';
 
 export default function NewBannerPage() {
@@ -272,10 +273,12 @@ export default function NewBannerPage() {
                     미리보기
                   </label>
                   <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-gray-200">
-                    <img
+                    <Image
                       src={imagePreview}
                       alt="Preview"
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   </div>
                 </div>

@@ -16,6 +16,10 @@ interface Exhibition {
   curator?: string;
 }
 
+interface ExhibitionWithStatus extends Exhibition {
+  calculatedStatus: 'UPCOMING' | 'CURRENT' | 'PAST';
+}
+
 export default function RecentExhibitionsDB() {
   const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,13 +31,13 @@ export default function RecentExhibitionsDB() {
         if (response.ok) {
           const data = await response.json();
           // Calculate status for each exhibition and filter
-          const exhibitionsWithStatus = data.map((ex: Exhibition) => ({
+          const exhibitionsWithStatus: ExhibitionWithStatus[] = data.map((ex: Exhibition) => ({
             ...ex,
             calculatedStatus: getExhibitionStatus(new Date(ex.startDate), new Date(ex.endDate))
           }));
           
-          const currentExhibitions = exhibitionsWithStatus.filter((ex: any) => ex.calculatedStatus === 'CURRENT');
-          const upcomingExhibitions = exhibitionsWithStatus.filter((ex: any) => ex.calculatedStatus === 'UPCOMING');
+          const currentExhibitions = exhibitionsWithStatus.filter((ex: ExhibitionWithStatus) => ex.calculatedStatus === 'CURRENT');
+          const upcomingExhibitions = exhibitionsWithStatus.filter((ex: ExhibitionWithStatus) => ex.calculatedStatus === 'UPCOMING');
           const recentExhibitions = [...currentExhibitions, ...upcomingExhibitions].slice(0, 3);
           setExhibitions(recentExhibitions);
         }

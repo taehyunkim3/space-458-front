@@ -11,7 +11,6 @@ export async function GET() {
         artist: true,
         startDate: true,
         endDate: true,
-        status: true,
         poster: true,
         images: true,
         description: true,

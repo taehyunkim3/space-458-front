@@ -1,7 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 interface SpaceImage {
   src: string;
@@ -71,9 +75,7 @@ interface CarouselProps {
   spaceTitle: string;
 }
 
-function ImageCarousel({ images, spaceTitle }: CarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
+function ImageCarousel({ images }: CarouselProps) {
   if (images.length === 1) {
     return (
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
@@ -88,62 +90,50 @@ function ImageCarousel({ images, spaceTitle }: CarouselProps) {
     );
   }
 
-  const nextImage = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
+  const swiperClass = `gallery-swiper-${Math.random().toString(36).substr(2, 9)}`;
 
   return (
-    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg group">
-      <Image
-        src={images[currentIndex].src}
-        alt={images[currentIndex].alt}
-        fill
-        className="object-cover transition-opacity duration-300"
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-      />
-      
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevImage}
-        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/70"
-        aria-label="이전 이미지"
+    <div className={`relative aspect-[4/3] w-full overflow-hidden rounded-lg gallery-swiper ${swiperClass}`}>
+      <Swiper
+        modules={[Navigation, Pagination]}
+        spaceBetween={0}
+        slidesPerView={1}
+        navigation={{
+          nextEl: `.${swiperClass} .swiper-button-next`,
+          prevEl: `.${swiperClass} .swiper-button-prev`,
+        }}
+        pagination={{
+          clickable: true,
+          el: `.${swiperClass} .swiper-pagination`,
+        }}
+        loop={images.length > 1}
+        className="h-full w-full"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      
-      <button
-        onClick={nextImage}
-        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/70"
-        aria-label="다음 이미지"
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-
-      {/* Indicators */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-2">
-        {images.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-              index === currentIndex ? 'bg-white' : 'bg-white/50'
-            }`}
-            aria-label={`${index + 1}번째 이미지로 이동`}
-          />
+        {images.map((image, index) => (
+          <SwiperSlide key={index}>
+            <div className="relative h-full w-full">
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            </div>
+          </SwiperSlide>
         ))}
-      </div>
+      </Swiper>
+
+      {/* Custom Navigation Buttons */}
+      <div className="swiper-button-prev opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      <div className="swiper-button-next opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
+      {/* Custom Pagination */}
+      <div className="swiper-pagination"></div>
 
       {/* Image Counter */}
-      <div className="absolute top-3 right-3 bg-black/50 text-white px-2 py-1 rounded text-sm font-light">
-        {currentIndex + 1} / {images.length}
+      <div className="absolute top-3 right-3 bg-black/50 text-white px-2 py-1 rounded text-sm font-light z-10">
+        <span className="swiper-counter">1 / {images.length}</span>
       </div>
     </div>
   );
@@ -165,7 +155,7 @@ export default function GallerySpaces() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {gallerySpaces.map((space) => (
-            <div key={space.id} className="space-y-6">
+            <div key={space.id} className="space-y-6 group">
               <ImageCarousel images={space.images} spaceTitle={space.title} />
               
               <div className="space-y-3">

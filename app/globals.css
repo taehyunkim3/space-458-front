@@ -82,3 +82,60 @@ select:focus {
     transition: all 200ms ease-out;
   }
 }
+
+/* Swiper Custom Styles */
+.swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: white !important;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: white !important;
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-size: 18px !important;
+  font-weight: 300 !important;
+}
+
+/* Gallery Swiper specific styles */
+.gallery-swiper .swiper-button-prev,
+.gallery-swiper .swiper-button-next {
+  width: 32px !important;
+  height: 32px !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-radius: 50% !important;
+  transition: all 0.3s !important;
+}
+
+.gallery-swiper .swiper-button-prev:hover,
+.gallery-swiper .swiper-button-next:hover {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+.gallery-swiper .swiper-button-prev {
+  left: 8px !important;
+}
+
+.gallery-swiper .swiper-button-next {
+  right: 8px !important;
+}
+
+.gallery-swiper .swiper-pagination {
+  bottom: 12px !important;
+}
+
+.gallery-swiper .swiper-pagination-bullet {
+  width: 8px !important;
+  height: 8px !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+.gallery-swiper .swiper-pagination-bullet-active {
+  background: white !important;
+}

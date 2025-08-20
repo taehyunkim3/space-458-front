@@ -4,21 +4,21 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { GALLERY_INFO } from "../constants/galleryInfo";
-import emailjs from '@emailjs/browser';
+import emailjs from "@emailjs/browser";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    type: "general",
+    type: "rental",
     subject: "",
     message: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -33,42 +33,49 @@ export default function ContactPage() {
 
   const getInquiryTypeText = (type: string): string => {
     switch (type) {
-      case 'general': return '일반 문의';
-      case 'exhibition': return '전시 관련';
-      case 'rental': return '대관 문의';
-      case 'collaboration': return '협업 제안';
-      case 'workshop': return '워크숍 문의';
-      case 'press': return '언론 문의';
-      default: return type;
+      case "general":
+        return "일반 문의";
+      case "exhibition":
+        return "전시 관련";
+      case "rental":
+        return "대관 문의";
+      case "collaboration":
+        return "협업 제안";
+      case "workshop":
+        return "워크숍 문의";
+      case "press":
+        return "언론 문의";
+      default:
+        return type;
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
+    setError("");
 
     try {
       // EmailJS 클라이언트 사이드 호출
       const templateParams = {
         from_name: formData.name,
         from_email: formData.email,
-        from_phone: formData.phone || '연락처 미제공',
+        from_phone: formData.phone || "연락처 미제공",
         inquiry_type: getInquiryTypeText(formData.type),
         subject: formData.subject,
         message: formData.message,
-        to_email: 'space458seoul@gmail.com',
+        to_email: "space458seoul@gmail.com",
       };
 
       const response = await emailjs.send(
-        'service_y7vn47b',
-        'template_6ws6auo', 
+        "service_y7vn47b",
+        "template_6ws6auo",
         templateParams,
-        'DiKPAnIMoQ7MkCWqU'
+        "DiKPAnIMoQ7MkCWqU"
       );
 
-      console.log('Email sent successfully:', response);
-      
+      console.log("Email sent successfully:", response);
+
       setSubmitted(true);
       setFormData({
         name: "",
@@ -79,8 +86,12 @@ export default function ContactPage() {
         message: "",
       });
     } catch (err: unknown) {
-      console.error('Email sending failed:', err);
-      setError(err instanceof Error ? err.message : 'Failed to send message. Please try again.');
+      console.error("Email sending failed:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to send message. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -91,7 +102,7 @@ export default function ContactPage() {
       {/* Hero Section */}
       <section className="relative h-96 overflow-hidden">
         <Image
-          src="https://via.placeholder.com/1920x800/f3f4f6/6b7280?text=Contact"
+          src="/images/out-1.jpg.webp"
           alt="Contact"
           fill
           className="object-cover"
@@ -186,7 +197,7 @@ export default function ContactPage() {
                   </h3>
                   <div className="flex space-x-4">
                     <Link
-                      href="https://instagram.com/space458"
+                      href={GALLERY_INFO.socialMedia.instagramUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-gray-900 transition-colors"
@@ -199,8 +210,8 @@ export default function ContactPage() {
                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                       </svg>
                     </Link>
-                    <Link
-                      href="https://naver.me/5GpL93wN"
+                    {/* <Link
+                      href={GALLERY_INFO.socialMedia}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-gray-900 transition-colors"
@@ -212,7 +223,7 @@ export default function ContactPage() {
                       >
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                       </svg>
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               </div>
@@ -251,138 +262,149 @@ export default function ContactPage() {
                   {error && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
                       <div className="flex items-center">
-                        <svg className="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <svg
+                          className="w-5 h-5 text-red-600 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
                         </svg>
-                        <p className="text-red-600 font-light text-sm">{error}</p>
+                        <p className="text-red-600 font-light text-sm">
+                          {error}
+                        </p>
                       </div>
                     </div>
                   )}
                   <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-light text-gray-700 mb-2"
+                        >
+                          이름 *
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="email"
+                          className="block text-sm font-light text-gray-700 mb-2"
+                        >
+                          이메일 *
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label
+                          htmlFor="phone"
+                          className="block text-sm font-light text-gray-700 mb-2"
+                        >
+                          연락처
+                        </label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          placeholder="010-1234-5678"
+                          className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="type"
+                          className="block text-sm font-light text-gray-700 mb-2"
+                        >
+                          문의 유형 *
+                        </label>
+                        <select
+                          id="type"
+                          name="type"
+                          value={formData.type}
+                          onChange={handleChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light"
+                        >
+                          <option value="rental">대관 문의</option>
+                          <option value="exhibition">전시 관련</option>
+                          <option value="collaboration">협업 제안</option>
+                          <option value="workshop">워크숍 문의</option>
+                          <option value="general">일반 문의</option>
+                        </select>
+                      </div>
+                    </div>
+
                     <div>
                       <label
-                        htmlFor="name"
+                        htmlFor="subject"
                         className="block text-sm font-light text-gray-700 mb-2"
                       >
-                        이름 *
+                        제목 *
                       </label>
                       <input
                         type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
+                        id="subject"
+                        name="subject"
+                        value={formData.subject}
                         onChange={handleChange}
                         required
                         className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light"
                       />
                     </div>
+
                     <div>
                       <label
-                        htmlFor="email"
+                        htmlFor="message"
                         className="block text-sm font-light text-gray-700 mb-2"
                       >
-                        이메일 *
+                        메시지 *
                       </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
+                      <textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
                         onChange={handleChange}
+                        rows={6}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light"
+                        className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light resize-vertical"
                       />
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-light text-gray-700 mb-2"
-                      >
-                        연락처
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="010-1234-5678"
-                        className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="type"
-                        className="block text-sm font-light text-gray-700 mb-2"
-                      >
-                        문의 유형 *
-                      </label>
-                    <select
-                      id="type"
-                      name="type"
-                      value={formData.type}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light"
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-gray-900 text-white py-4 hover:bg-gray-800 transition-colors duration-300 font-light tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <option value="general">일반 문의</option>
-                      <option value="exhibition">전시 관련</option>
-                      <option value="rental">대관 문의</option>
-                      <option value="collaboration">협업 제안</option>
-                      <option value="workshop">워크숍 문의</option>
-                      <option value="press">언론 문의</option>
-                    </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="subject"
-                      className="block text-sm font-light text-gray-700 mb-2"
-                    >
-                      제목 *
-                    </label>
-                    <input
-                      type="text"
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-light text-gray-700 mb-2"
-                    >
-                      메시지 *
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      rows={6}
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 focus:border-gray-900 focus:outline-none transition-colors font-light resize-vertical"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-gray-900 text-white py-4 hover:bg-gray-800 transition-colors duration-300 font-light tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? "전송 중..." : "문의 보내기"}
-                  </button>
-                </form>
+                      {isSubmitting ? "전송 중..." : "문의 보내기"}
+                    </button>
+                  </form>
                 </div>
               )}
             </div>
@@ -455,7 +477,7 @@ export default function ContactPage() {
                     </svg>
                   </Link>
                   <Link
-                    href="https://kko.kakao.com/ZE_L2NY3oj"
+                    href="https://place.map.kakao.com/509706690"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 bg-yellow-500 text-white hover:bg-yellow-600 transition-colors duration-300 text-sm font-light rounded"

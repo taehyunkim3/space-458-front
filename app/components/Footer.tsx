@@ -76,9 +76,17 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 pt-8 border-t border-gray-100">
-          <p className="text-xs text-gray-500 text-center font-light">
-            © 2025 Space 458. All rights reserved.
-          </p>
+          <div className="flex justify-between items-center">
+            <p className="text-xs text-gray-500 font-light">
+              © 2025 Space 458. All rights reserved.
+            </p>
+            <Link
+              href="/admin"
+              className="text-xs text-gray-400 hover:text-gray-500 transition-colors font-light opacity-50"
+            >
+              관리자
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

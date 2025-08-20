@@ -47,7 +47,9 @@ export async function POST(request: NextRequest) {
 
     let imagePath = null;
     if (imageFile && imageFile.size > 0) {
-      imagePath = await processImageUpload(imageFile, 'news', 1200, 85);
+      await processImageUpload(imageFile, 'news', 1200, 85);
+      // TODO: Update to use DB BLOB storage
+      imagePath = '/api/images/news/temp';
     }
 
     const newsItem = await prisma.news.create({

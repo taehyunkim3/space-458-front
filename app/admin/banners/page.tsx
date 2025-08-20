@@ -83,6 +83,24 @@ export default function BannersPage() {
     }
   };
 
+  const downloadImage = async (imageUrl: string, filename: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      setError('이미지 다운로드에 실패했습니다.');
+      console.error('Error downloading image:', error);
+    }
+  };
+
   useEffect(() => {
     fetchBanners();
   }, []);
@@ -162,7 +180,7 @@ export default function BannersPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="relative w-20 h-12 rounded overflow-hidden">
                         <Image
-                          src={banner.image}
+                          src={`/api/images/banners/${banner.id}`}
                           alt={banner.title}
                           fill
                           className="object-cover"
@@ -201,6 +219,12 @@ export default function BannersPage() {
                         >
                           수정
                         </Link>
+                        <button
+                          onClick={() => downloadImage(`/api/images/banners/${banner.id}`, `banner-${banner.id}.webp`)}
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          다운로드
+                        </button>
                         <button
                           onClick={() => deleteBanner(banner.id)}
                           className="text-red-600 hover:text-red-800"

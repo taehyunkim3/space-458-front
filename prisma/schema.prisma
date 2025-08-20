@@ -17,7 +17,9 @@ model Banner {
   id       Int    @id @default(autoincrement())
   title    String
   subtitle String?
-  image    String
+  image    String?
+  imageData Bytes?
+  imageMimeType String?
   link     String?
   type     String @default("image")
   order    Int    @default(0)
@@ -35,8 +37,12 @@ model Exhibition {
   startDate   DateTime
   endDate     DateTime
   status      ExhibitionStatus
-  poster      String
+  poster      String?
+  posterData  Bytes?
+  posterMimeType String?
   images      String[]
+  imagesData  Bytes[]
+  imagesMimeTypes String[]
   description String   @db.Text
   curator     String?
   createdAt   DateTime @default(now())
@@ -52,6 +58,8 @@ model News {
   date      DateTime
   content   String   @db.Text
   image     String?
+  imageData Bytes?
+  imageMimeType String?
   link      String?
   featured  Boolean  @default(false)
   createdAt DateTime @default(now())

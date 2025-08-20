@@ -69,24 +69,24 @@ export async function PUT(
 
     let posterPath = existingExhibition.poster;
 
-    // If new poster is uploaded, process it and delete old one
+    // If new poster is uploaded, process it
     if (posterFile && posterFile.size > 0) {
-      posterPath = await processImageUpload(posterFile, 'exhibitions', 800, 90);
-      
-      // Delete old poster
-      if (existingExhibition.poster.startsWith('/uploads/')) {
-        await deleteImage(existingExhibition.poster);
-      }
+      await processImageUpload(posterFile, 'exhibitions', 800, 90);
+      // For now, we'll keep the old poster path structure
+      // TODO: Update to use DB BLOB storage
+      posterPath = `/api/images/exhibitions/${existingExhibition.id}?type=poster`;
     }
 
     // Process additional images if any
     const images: string[] = [...existingExhibition.images];
     const imageFiles = formData.getAll('images') as File[];
     
-    for (const imageFile of imageFiles) {
+    for (let i = 0; i < imageFiles.length; i++) {
+      const imageFile = imageFiles[i];
       if (imageFile.size > 0) {
-        const imagePath = await processImageUpload(imageFile, 'exhibitions', 1200, 85);
-        images.push(imagePath);
+        await processImageUpload(imageFile, 'exhibitions', 1200, 85);
+        // TODO: Update to use DB BLOB storage
+        images.push(`/api/images/exhibitions/${existingExhibition.id}?type=${i}`);
       }
     }
 
@@ -137,14 +137,14 @@ export async function DELETE(
     }
 
     // Delete poster if it's an upload
-    if (exhibition.poster.startsWith('/uploads/')) {
-      await deleteImage(exhibition.poster);
+    if (exhibition.poster && exhibition.poster.startsWith('/uploads/')) {
+      await deleteImage();
     }
 
     // Delete additional images
     for (const imagePath of exhibition.images) {
       if (imagePath.startsWith('/uploads/')) {
-        await deleteImage(imagePath);
+        await deleteImage();
       }
     }
 

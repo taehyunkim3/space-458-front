@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { compressImage, validateImageFile, formatFileSize } from '../../../lib/imageUtils';
 
 export default function NewBannerPage() {
   const router = useRouter();
@@ -15,9 +16,12 @@ export default function NewBannerPage() {
     active: true
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [compressedFile, setCompressedFile] = useState<Blob | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCompressing, setIsCompressing] = useState(false);
   const [error, setError] = useState('');
+  const [fileSizeInfo, setFileSizeInfo] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const value = e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value;
@@ -27,17 +31,42 @@ export default function NewBannerPage() {
     }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
+    if (!file) return;
+
+    // Validate file
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+      setError(validation.error || '');
+      return;
+    }
+
+    setError('');
+    setImageFile(file);
+    setIsCompressing(true);
+    
+    try {
+      // Show original file size
+      setFileSizeInfo(`원본: ${formatFileSize(file.size)}`);
       
-      // Create preview
+      // Compress image
+      const compressed = await compressImage(file, 1920, 0.7);
+      setCompressedFile(compressed);
+      
+      // Update file size info
+      setFileSizeInfo(`원본: ${formatFileSize(file.size)} → 압축: ${formatFileSize(compressed.size)}`);
+      
+      // Create preview from compressed image
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressed);
+    } catch {
+      setError('이미지 압축 중 오류가 발생했습니다.');
+    } finally {
+      setIsCompressing(false);
     }
   };
 
@@ -46,7 +75,7 @@ export default function NewBannerPage() {
     setIsSubmitting(true);
     setError('');
 
-    if (!imageFile) {
+    if (!compressedFile) {
       setError('이미지를 선택해주세요.');
       setIsSubmitting(false);
       return;
@@ -60,7 +89,12 @@ export default function NewBannerPage() {
       submitData.append('type', formData.type);
       submitData.append('order', formData.order.toString());
       submitData.append('active', formData.active.toString());
-      submitData.append('image', imageFile);
+      
+      // Use compressed file for upload
+      const compressedImageFile = new File([compressedFile], imageFile?.name || 'banner.webp', {
+        type: 'image/webp'
+      });
+      submitData.append('image', compressedImageFile);
 
       const response = await fetch('/api/admin/banners', {
         method: 'POST',
@@ -215,8 +249,21 @@ export default function NewBannerPage() {
                   className="w-full px-3 py-2 border border-gray-300 focus:border-gray-900 focus:outline-none font-light"
                 />
                 <p className="mt-1 text-xs text-gray-500 font-light">
-                  JPEG, PNG, WebP 파일만 업로드 가능 (최대 10MB)
+                  JPEG, PNG, WebP 파일만 업로드 가능 (최대 50MB) - 자동으로 1920px로 압축됩니다
                 </p>
+                
+                {isCompressing && (
+                  <div className="mt-2 flex items-center text-sm text-blue-600">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                    이미지 압축 중...
+                  </div>
+                )}
+                
+                {fileSizeInfo && (
+                  <div className="mt-2 text-sm text-green-600 font-light">
+                    {fileSizeInfo}
+                  </div>
+                )}
               </div>
 
               {imagePreview && (

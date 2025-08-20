@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
         hostname: 'via.placeholder.com',
       },
     ],
+    domains: ['localhost'],
+    unoptimized: false,
   },
 };
 

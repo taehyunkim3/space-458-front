@@ -68,14 +68,11 @@ export async function PUT(
 
     let imagePath = existingNews.image;
 
-    // If new image is uploaded, process it and delete old one
+    // If new image is uploaded, process it
     if (imageFile && imageFile.size > 0) {
-      imagePath = await processImageUpload(imageFile, 'news', 1200, 85);
-      
-      // Delete old image
-      if (existingNews.image && existingNews.image.startsWith('/uploads/')) {
-        await deleteImage(existingNews.image);
-      }
+      await processImageUpload(imageFile, 'news', 1200, 85);
+      // TODO: Update to use DB BLOB storage
+      imagePath = `/api/images/news/${existingNews.id}`;
     }
 
     const news = await prisma.news.update({
@@ -124,7 +121,7 @@ export async function DELETE(
 
     // Delete image if it's an upload
     if (news.image && news.image.startsWith('/uploads/')) {
-      await deleteImage(news.image);
+      await deleteImage();
     }
 
     // Delete news from database

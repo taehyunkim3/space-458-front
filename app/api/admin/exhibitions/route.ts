@@ -47,16 +47,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Process poster image
-    const posterPath = await processImageUpload(posterFile, 'exhibitions', 800, 90);
+    await processImageUpload(posterFile, 'exhibitions', 800, 90);
+    // TODO: Update to use DB BLOB storage
+    const posterPath = '/api/images/exhibitions/temp?type=poster';
 
     // Process additional images if any
     const images: string[] = [];
     const imageFiles = formData.getAll('images') as File[];
     
-    for (const imageFile of imageFiles) {
+    for (let i = 0; i < imageFiles.length; i++) {
+      const imageFile = imageFiles[i];
       if (imageFile.size > 0) {
-        const imagePath = await processImageUpload(imageFile, 'exhibitions', 1200, 85);
-        images.push(imagePath);
+        await processImageUpload(imageFile, 'exhibitions', 1200, 85);
+        // TODO: Update to use DB BLOB storage
+        images.push(`/api/images/exhibitions/temp?type=${i}`);
       }
     }
 

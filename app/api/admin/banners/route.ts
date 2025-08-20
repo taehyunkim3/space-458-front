@@ -44,13 +44,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Process and upload image
-    const imagePath = await processImageUpload(imageFile, 'banners', 1920, 85);
+    const { imageData, mimeType } = await processImageUpload(imageFile, 'banners', 1920, 85);
 
     const banner = await prisma.banner.create({
       data: {
         title,
         subtitle,
-        image: imagePath,
+        imageData,
+        imageMimeType: mimeType,
         link,
         type,
         order,

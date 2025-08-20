@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getExhibitionStatus, getStatusLabel } from '../lib/exhibition-status';
 
 interface Exhibition {
   id: number;
@@ -10,7 +11,6 @@ interface Exhibition {
   artist: string;
   startDate: string;
   endDate: string;
-  status: 'CURRENT' | 'UPCOMING' | 'PAST';
   poster: string;
   description: string;
   curator?: string;
@@ -26,9 +26,14 @@ export default function RecentExhibitionsDB() {
         const response = await fetch('/api/exhibitions');
         if (response.ok) {
           const data = await response.json();
-          // Show current and upcoming exhibitions first
-          const currentExhibitions = data.filter((ex: Exhibition) => ex.status === 'CURRENT');
-          const upcomingExhibitions = data.filter((ex: Exhibition) => ex.status === 'UPCOMING');
+          // Calculate status for each exhibition and filter
+          const exhibitionsWithStatus = data.map((ex: Exhibition) => ({
+            ...ex,
+            calculatedStatus: getExhibitionStatus(new Date(ex.startDate), new Date(ex.endDate))
+          }));
+          
+          const currentExhibitions = exhibitionsWithStatus.filter((ex: any) => ex.calculatedStatus === 'CURRENT');
+          const upcomingExhibitions = exhibitionsWithStatus.filter((ex: any) => ex.calculatedStatus === 'UPCOMING');
           const recentExhibitions = [...currentExhibitions, ...upcomingExhibitions].slice(0, 3);
           setExhibitions(recentExhibitions);
         }
@@ -51,16 +56,6 @@ export default function RecentExhibitionsDB() {
     });
   };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'CURRENT':
-        return '현재 전시';
-      case 'UPCOMING':
-        return '예정 전시';
-      default:
-        return '';
-    }
-  };
 
   if (loading) {
     return (
@@ -109,7 +104,7 @@ export default function RecentExhibitionsDB() {
                       />
                       <div className="absolute top-4 left-4">
                         <span className="bg-black/70 text-white px-3 py-1 text-xs font-light tracking-wide">
-                          {getStatusText(exhibition.status)}
+                          {getStatusLabel(getExhibitionStatus(new Date(exhibition.startDate), new Date(exhibition.endDate)))}
                         </span>
                       </div>
                     </div>

@@ -11,7 +11,6 @@ interface Exhibition {
   artist: string;
   startDate: string;
   endDate: string;
-  status: string;
   poster: string;
   images: string[];
   description: string;
@@ -29,7 +28,6 @@ export default function EditExhibitionPage() {
     artist: '',
     startDate: '',
     endDate: '',
-    status: 'upcoming',
     description: '',
     curator: ''
   });
@@ -53,7 +51,6 @@ export default function EditExhibitionPage() {
           artist: exhibitionData.artist,
           startDate: new Date(exhibitionData.startDate).toISOString().split('T')[0],
           endDate: new Date(exhibitionData.endDate).toISOString().split('T')[0],
-          status: exhibitionData.status,
           description: exhibitionData.description,
           curator: exhibitionData.curator || ''
         });
@@ -102,7 +99,6 @@ export default function EditExhibitionPage() {
       submitData.append('artist', formData.artist);
       submitData.append('startDate', formData.startDate);
       submitData.append('endDate', formData.endDate);
-      submitData.append('status', formData.status);
       submitData.append('description', formData.description);
       submitData.append('curator', formData.curator);
       
@@ -243,22 +239,6 @@ export default function EditExhibitionPage() {
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="status" className="block text-sm font-light text-gray-700 mb-2">
-                  상태
-                </label>
-                <select
-                  id="status"
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 focus:border-gray-900 focus:outline-none font-light"
-                >
-                  <option value="upcoming">예정</option>
-                  <option value="current">진행중</option>
-                  <option value="past">종료</option>
-                </select>
-              </div>
 
               <div>
                 <label htmlFor="curator" className="block text-sm font-light text-gray-700 mb-2">

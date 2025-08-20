@@ -12,7 +12,6 @@ export default function NewExhibitionPage() {
     artist: '',
     startDate: '',
     endDate: '',
-    status: 'UPCOMING',
     description: '',
     curator: ''
   });
@@ -124,7 +123,6 @@ export default function NewExhibitionPage() {
       submitFormData.append('artist', formData.artist);
       submitFormData.append('startDate', formData.startDate);
       submitFormData.append('endDate', formData.endDate);
-      submitFormData.append('status', formData.status);
       submitFormData.append('description', formData.description);
       submitFormData.append('curator', formData.curator);
       
@@ -228,21 +226,6 @@ export default function NewExhibitionPage() {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              상태
-            </label>
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:border-black"
-            >
-              <option value="UPCOMING">예정</option>
-              <option value="CURRENT">진행중</option>
-              <option value="PAST">종료</option>
-            </select>
-          </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">

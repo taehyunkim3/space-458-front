@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getExhibitionStatus, getStatusLabel, getStatusColor } from '../../lib/exhibition-status';
 
 interface Exhibition {
   id: number;
@@ -10,7 +11,6 @@ interface Exhibition {
   artist: string;
   startDate: string;
   endDate: string;
-  status: 'CURRENT' | 'UPCOMING' | 'PAST';
   poster: string;
   description: string;
   curator?: string;
@@ -57,23 +57,6 @@ export default function ExhibitionsPage() {
     return new Date(dateString).toLocaleDateString('ko-KR');
   };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'CURRENT': return '현재 전시';
-      case 'UPCOMING': return '예정 전시';
-      case 'PAST': return '지난 전시';
-      default: return status;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'CURRENT': return 'bg-green-100 text-green-800';
-      case 'UPCOMING': return 'bg-blue-100 text-blue-800';
-      case 'PAST': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
 
   useEffect(() => {
     fetchExhibitions();
@@ -178,9 +161,14 @@ export default function ExhibitionsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-light ${getStatusColor(exhibition.status)}`}>
-                        {getStatusText(exhibition.status)}
-                      </span>
+                      {(() => {
+                        const status = getExhibitionStatus(new Date(exhibition.startDate), new Date(exhibition.endDate));
+                        return (
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-light ${getStatusColor(status)}`}>
+                            {getStatusLabel(status)}
+                          </span>
+                        );
+                      })()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-light">
                       <div className="flex space-x-2">

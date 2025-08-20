@@ -47,7 +47,6 @@ export async function PUT(
     const artist = formData.get('artist') as string;
     const startDate = new Date(formData.get('startDate') as string);
     const endDate = new Date(formData.get('endDate') as string);
-    const status = formData.get('status') as string;
     const description = formData.get('description') as string;
     const curator = formData.get('curator') as string || null;
     const posterFile = formData.get('poster') as File;
@@ -72,7 +71,6 @@ export async function PUT(
       artist: string;
       startDate: Date;
       endDate: Date;
-      status: 'CURRENT' | 'UPCOMING' | 'PAST';
       description: string;
       curator?: string | null;
       posterData?: Buffer;
@@ -84,7 +82,6 @@ export async function PUT(
       artist,
       startDate,
       endDate,
-      status: status as 'CURRENT' | 'UPCOMING' | 'PAST',
       description,
       curator
     };

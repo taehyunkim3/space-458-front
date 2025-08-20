@@ -35,7 +35,6 @@ export async function POST(request: NextRequest) {
     const artist = formData.get('artist') as string;
     const startDate = new Date(formData.get('startDate') as string);
     const endDate = new Date(formData.get('endDate') as string);
-    const status = formData.get('status') as string;
     const description = formData.get('description') as string;
     const curator = formData.get('curator') as string || null;
     const posterFile = formData.get('poster') as File;
@@ -68,7 +67,6 @@ export async function POST(request: NextRequest) {
         artist,
         startDate,
         endDate,
-        status: status as 'CURRENT' | 'UPCOMING' | 'PAST',
         posterData,
         posterMimeType,
         images: [], // Keep empty for backwards compatibility

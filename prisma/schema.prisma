@@ -36,7 +36,6 @@ model Exhibition {
   artist      String
   startDate   DateTime
   endDate     DateTime
-  status      ExhibitionStatus
   poster      String?
   posterData  Bytes?
   posterMimeType String?
@@ -91,11 +90,6 @@ model LoginAttempt {
   @@map("login_attempts")
 }
 
-enum ExhibitionStatus {
-  CURRENT
-  UPCOMING
-  PAST
-}
 
 enum NewsType {
   NOTICE

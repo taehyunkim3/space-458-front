@@ -66,7 +66,7 @@ export async function PUT(
       return NextResponse.json({ error: 'News not found' }, { status: 404 });
     }
 
-    let updateData: {
+    const updateData: {
       title: string;
       type: 'NOTICE' | 'PRESS' | 'EVENT' | 'WORKSHOP';
       date: Date;

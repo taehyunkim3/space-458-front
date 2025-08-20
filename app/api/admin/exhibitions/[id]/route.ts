@@ -67,7 +67,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Exhibition not found' }, { status: 404 });
     }
 
-    let updateData: {
+    const updateData: {
       title: string;
       artist: string;
       startDate: Date;

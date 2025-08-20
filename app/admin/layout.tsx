@@ -10,7 +10,6 @@ const adminNavigation = [
   { name: "배너 관리", href: "/admin/banners" },
   { name: "전시 관리", href: "/admin/exhibitions" },
   { name: "뉴스 관리", href: "/admin/news" },
-  { name: "갤러리 정보", href: "/admin/gallery-info" },
 ];
 
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
